@@ -2,7 +2,7 @@
     <div class="modal" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>تنظیمات</h3>
+                <h3>Settings</h3>
                 <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
             </div>
             <form id="settingsForm">
@@ -53,8 +53,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeSettingsModal()">لغو</button>
-                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeSettingsModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
@@ -64,16 +64,16 @@
     <div class="modal" id="confirmModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>تأیید آپدیت</h3>
+                <h3>Confirm Update</h3>
                 <button class="modal-close" onclick="closeConfirmModal()">&times;</button>
             </div>
             <p style="margin-bottom: 20px; color: #666;">
-                آیا از انجام آپدیت اطمینان دارید؟<br><br>
-                <strong>توجه:</strong> قبل از آپدیت یک بک‌آپ خودکار ایجاد می‌شود.
+                Are you sure you want to perform the update?<br><br>
+                <strong>Note:</strong> An automatic backup will be created before the update.
             </p>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeConfirmModal()">لغو</button>
-                <button class="btn btn-success" onclick="confirmUpdate()">بله، آپدیت کن</button>
+                <button class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+                <button class="btn btn-success" onclick="confirmUpdate()">Yes, Update</button>
             </div>
         </div>
     </div>
@@ -82,16 +82,16 @@
     <div class="modal" id="deleteAllModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>تأیید حذف همه بک‌آپ‌ها</h3>
+                <h3>Confirm Delete All Backups</h3>
                 <button class="modal-close" onclick="closeDeleteAllModal()">&times;</button>
             </div>
             <p style="margin-bottom: 20px; color: #666;">
-                آیا از حذف تمام بک‌آپ‌ها اطمینان دارید؟<br><br>
-                <strong>هشدار:</strong> این عملیات برگشت‌پذیر نیست!
+                Are you sure you want to delete all backups?<br><br>
+                <strong>Warning:</strong> This action cannot be undone!
             </p>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeDeleteAllModal()">لغو</button>
-                <button class="btn btn-danger" onclick="confirmDeleteAllBackups()">حذف همه</button>
+                <button class="btn btn-secondary" onclick="closeDeleteAllModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDeleteAllBackups()">Delete All</button>
             </div>
         </div>
     </div>

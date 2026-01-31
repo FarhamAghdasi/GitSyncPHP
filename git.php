@@ -1076,9 +1076,9 @@ if ($action === 'delete_all_backups' && securityCheck()) {
     }
     
     if (empty($errors)) {
-        echo json_encode(['success' => true, 'message' => "$deleted بک‌آپ با موفقیت حذف شد"]);
+        echo json_encode(['success' => true, 'message' => "$deleted backup(s) deleted successfully"]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'خطا در حذف برخی بک‌آپ‌ها: ' . implode(', ', $errors)]);
+        echo json_encode(['success' => false, 'message' => 'Error deleting some backups: ' . implode(', ', $errors)]);
     }
     exit;
 }
@@ -1091,7 +1091,7 @@ include __DIR__ . '/assets/header.php';
 ?>
         <!-- Header -->
         <div class="header">
-            <h1>🔄 آپدیت خودکار از GitHub</h1>
+            <h1>🔄 GitHub Auto-Update</h1>
             <p class="repo-info">📦 <?php echo htmlspecialchars(REPO_USER . '/' . REPO_NAME); ?> | 🌿 <?php echo htmlspecialchars(BRANCH); ?></p>
         </div>
         
@@ -1099,30 +1099,30 @@ include __DIR__ . '/assets/header.php';
         <div class="status-cards">
             <div class="status-card info">
                 <div class="icon">📌</div>
-                <div class="label">نسخه فعلی</div>
+                <div class="label">Current Version</div>
                 <div class="value"><?php echo htmlspecialchars($currentVersion); ?></div>
             </div>
             <?php if ($latestCommit): ?>
             <div class="status-card success">
                 <div class="icon">🔖</div>
-                <div class="label">آخرین کامیت</div>
+                <div class="label">Latest Commit</div>
                 <div class="value"><?php echo htmlspecialchars(substr($latestCommit['sha'], 0, 7)); ?></div>
             </div>
             <div class="status-card info">
                 <div class="icon">📝</div>
-                <div class="label">پیام کامیت</div>
+                <div class="label">Commit Message</div>
                 <div class="value" style="font-size: 14px;"><?php echo htmlspecialchars(substr($latestCommit['message'], 0, 30)) . '...'; ?></div>
             </div>
             <div class="status-card warning">
                 <div class="icon">📅</div>
-                <div class="label">تاریخ</div>
+                <div class="label">Date</div>
                 <div class="value"><?php echo htmlspecialchars($latestCommit['date']); ?></div>
             </div>
             <?php endif; ?>
             <div class="status-card <?php echo $updateAvailable ? 'success' : 'info'; ?>">
                 <div class="icon">🔄</div>
-                <div class="label">وضعیت</div>
-                <div class="value"><?php echo $updateAvailable ? 'آپدیت موجود' : 'به‌روز'; ?></div>
+                <div class="label">Status</div>
+                <div class="value"><?php echo $updateAvailable ? 'Update Available' : 'Up to Date'; ?></div>
             </div>
         </div>
         
@@ -1130,26 +1130,26 @@ include __DIR__ . '/assets/header.php';
         <?php if ($updateAvailable): ?>
         <div class="update-banner">
             <div class="info">
-                <h3>🚀 آپدیت جدید موجود است!</h3>
-                <p>نسخه <?php echo htmlspecialchars(substr($latestCommit['sha'], 0, 7)); ?> آماده نصب است</p>
+                <h3>🚀 New Update Available!</h3>
+                <p>Version <?php echo htmlspecialchars(substr($latestCommit['sha'], 0, 7)); ?> is ready to install</p>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button class="btn btn-success" onclick="startUpdate()">
-                    ▶️ شروع آپدیت
+                    ▶️ Start Update
                 </button>
                 <button class="btn btn-secondary" onclick="showSettingsModal()">
-                    ⚙️ تنظیمات
+                    ⚙️ Settings
                 </button>
             </div>
         </div>
         <?php else: ?>
         <div class="update-banner" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
             <div class="info">
-                <h3>✅ سیستم به‌روز است</h3>
-                <p>شما از آخرین نسخه استفاده می‌کنید</p>
+                <h3>✅ System is Up to Date</h3>
+                <p>You are using the latest version</p>
             </div>
             <button class="btn btn-primary" onclick="forceUpdate()">
-                🔄 بررسی مجدد
+                🔄 Check Again
             </button>
         </div>
         <?php endif; ?>
@@ -1157,13 +1157,13 @@ include __DIR__ . '/assets/header.php';
         <!-- Main Actions Card -->
         <div class="card">
             <div class="card-header">
-                <h2>📋 عملیات</h2>
+                <h2>📋 Operations</h2>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-primary" onclick="showSettingsModal()">
-                        ⚙️ تنظیمات
+                        ⚙️ Settings
                     </button>
                     <button class="btn btn-secondary" onclick="refreshStatus()">
-                        🔄 بروزرسانی وضعیت
+                        🔄 Refresh Status
                     </button>
                 </div>
             </div>
@@ -1172,7 +1172,7 @@ include __DIR__ . '/assets/header.php';
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressFill"></div>
                     </div>
-                    <p id="progressText" style="text-align: center; color: #666;">در حال آپدیت...</p>
+                    <p id="progressText" style="text-align: center; color: #666;">Updating...</p>
                 </div>
             </div>
         </div>
@@ -1180,14 +1180,14 @@ include __DIR__ . '/assets/header.php';
         <!-- Backups Card -->
         <div class="card">
             <div class="card-header">
-                <h2>💾 بک‌آپ‌ها</h2>
+                <h2>💾 Backups</h2>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <span style="background: #667eea; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">
-                        <?php echo count($backups); ?> عدد
+                        <?php echo count($backups); ?> items
                     </span>
                     <?php if (!empty($backups)): ?>
                     <button class="btn btn-warning btn-icon" onclick="deleteAllBackups()">
-                        🗑️ حذف همه
+                        🗑️ Delete All
                     </button>
                     <?php endif; ?>
                 </div>
@@ -1196,7 +1196,7 @@ include __DIR__ . '/assets/header.php';
                 <?php if (empty($backups)): ?>
                 <div class="empty-state">
                     <div class="icon">📦</div>
-                    <p>هیچ بک‌آپی موجود نیست</p>
+                    <p>No backups available</p>
                 </div>
                 <?php else: ?>
                 <ul class="backup-list">
@@ -1214,10 +1214,10 @@ include __DIR__ . '/assets/header.php';
                         </div>
                         <div class="backup-actions">
                             <a href="?action=download_backup&key=<?php echo htmlspecialchars($key); ?>&file=<?php echo urlencode($backup['name']); ?>" class="btn btn-primary btn-icon">
-                                ⬇️ دانلود
+                                ⬇️ Download
                             </a>
                             <button class="btn btn-danger btn-icon" onclick="deleteBackup('<?php echo htmlspecialchars($backup['name']); ?>')">
-                                🗑️ حذف
+                                🗑️ Delete
                             </button>
                         </div>
                     </li>
@@ -1234,9 +1234,9 @@ include __DIR__ . '/assets/header.php';
         ?>
         <div class="card">
             <div class="card-header">
-                <h2>📜 لاگ عملیات<?php if ($logIsLarge): ?><span class="warning-badge">⚠️ <?php echo $logSizeMB; ?> MB</span><?php endif; ?></h2>
+                <h2>📜 Operation Log<?php if ($logIsLarge): ?><span class="warning-badge">⚠️ <?php echo $logSizeMB; ?> MB</span><?php endif; ?></h2>
                 <button class="btn btn-secondary btn-icon" onclick="clearLog()">
-                    🧹 پاک کردن
+                    🧹 Clear
                 </button>
             </div>
             <div class="card-body">

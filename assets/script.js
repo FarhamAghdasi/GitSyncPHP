@@ -107,14 +107,14 @@ document.getElementById('settingsForm').addEventListener('submit', function(e) {
     .then(function(result) {
         if (result.success) {
             closeSettingsModal();
-            showToast('تنظیمات با موفقیت ذخیره شد', 'success');
+            showToast('Settings saved successfully', 'success');
             setTimeout(function() { location.reload(); }, 1500);
         } else {
-            showToast('خطا در ذخیره تنظیمات: ' + result.message, 'error');
+            showToast('Error saving settings: ' + result.message, 'error');
         }
     })
     .catch(function(error) {
-        showToast('خطا در ارتباط با سرور', 'error');
+        showToast('Server connection error', 'error');
     });
 });
 
@@ -139,7 +139,7 @@ function runUpdate() {
     
     progressDiv.style.display = 'block';
     progressFill.style.width = '30%';
-    progressText.textContent = 'در حال اتصال به GitHub...';
+    progressText.textContent = 'Connecting to GitHub...';
     
     var formData = new FormData();
     formData.append('action', 'run_update');
@@ -155,23 +155,23 @@ function runUpdate() {
     .then(function(response) { return response.json(); })
     .then(function(result) {
         progressFill.style.width = '70%';
-        progressText.textContent = 'در حال دانلود و استخراج فایل‌ها...';
+        progressText.textContent = 'Downloading and extracting files...';
         
         progressFill.style.width = '100%';
         
         if (result.success) {
             if (result.upgraded) {
-                progressText.textContent = 'آپدیت با موفقیت انجام شد!';
-                showToast('آپدیت با موفقیت انجام شد! نسخه: ' + result.new_version, 'success');
+                progressText.textContent = 'Update completed successfully!';
+                showToast('Update completed successfully! Version: ' + result.new_version, 'success');
             } else {
-                progressText.textContent = 'سیستم از قبل به‌روز بود';
-                showToast('سیستم از قبل به‌روز است', 'info');
+                progressText.textContent = 'System was already up to date';
+                showToast('System is already up to date', 'info');
             }
             
             setTimeout(function() { location.reload(); }, 2000);
         } else {
-            progressText.textContent = 'آپدیت ناموفق بود';
-            showToast('آپدیت ناموفق بود', 'error');
+            progressText.textContent = 'Update failed';
+            showToast('Update failed', 'error');
             setTimeout(function() { progressDiv.style.display = 'none'; }, 3000);
         }
         
@@ -179,8 +179,8 @@ function runUpdate() {
         location.reload();
     })
     .catch(function(error) {
-        progressText.textContent = 'خطا در ارتباط با سرور';
-        showToast('خطا در ارتباط با سرور', 'error');
+        progressText.textContent = 'Server connection error';
+        showToast('Server connection error', 'error');
         setTimeout(function() { progressDiv.style.display = 'none'; }, 3000);
     });
 }
@@ -190,9 +190,9 @@ function clearLog() {
     fetch('?action=get_log_size&key=' + UPDATE_KEY)
     .then(function(response) { return response.json(); })
     .then(function(sizeData) {
-        var confirmMessage = 'آیا میخواهید لاگ را پاک کنید؟';
+        var confirmMessage = 'Do you want to clear the log?';
         if (sizeData.size > 200) {
-            confirmMessage = 'هشدار! حجم فایل لاگ ' + sizeData.size + ' مگابایت است.\n\nآیا از پاک کردن آن اطمینان دارید؟';
+            confirmMessage = 'Warning! Log file size is ' + sizeData.size + ' MB.\n\nAre you sure you want to clear it?';
         }
         
         if (!confirm(confirmMessage)) {
@@ -203,18 +203,18 @@ function clearLog() {
         .then(function(response) { return response.json(); })
         .then(function(result) {
             if (result.success) {
-                showToast('لاگ با موفقیت پاک شد', 'success');
+                showToast('Log cleared successfully', 'success');
                 setTimeout(function() { location.reload(); }, 1000);
             } else {
-                showToast('خطا در پاک کردن لاگ: ' + result.message, 'error');
+                showToast('Error clearing log: ' + result.message, 'error');
             }
         })
         .catch(function(error) {
-            showToast('خطا در ارتباط با سرور', 'error');
+            showToast('Server connection error', 'error');
         });
     })
     .catch(function(error) {
-        showToast('خطا در ارتباط با سرور', 'error');
+        showToast('Server connection error', 'error');
     });
 }
 
@@ -234,9 +234,9 @@ function deleteBackup(filename) {
     })
     .then(function(response) { return response.json(); })
     .then(function(sizeData) {
-        var confirmMessage = 'آیا از حذف این بکآپ مطمئن هستید؟';
+        var confirmMessage = 'Are you sure you want to delete this backup?';
         if (sizeData.size > 200) {
-            confirmMessage = 'هشدار! حجم این بکآپ ' + sizeData.size + ' مگابایت است.\n\nآیا از حذف آن اطمینان دارید؟';
+            confirmMessage = 'Warning! This backup size is ' + sizeData.size + ' MB.\n\nAre you sure you want to delete it?';
         }
         
         if (!confirm(confirmMessage)) {
@@ -255,18 +255,18 @@ function deleteBackup(filename) {
         .then(function(response) { return response.json(); })
         .then(function(result) {
             if (result.success) {
-                showToast('بکآپ با موفقیت حذف شد', 'success');
+                showToast('Backup deleted successfully', 'success');
                 setTimeout(function() { location.reload(); }, 1000);
             } else {
-                showToast('خطا در حذف بکآپ: ' + result.message, 'error');
+                showToast('Error deleting backup: ' + result.message, 'error');
             }
         })
         .catch(function(error) {
-            showToast('خطا در ارتباط با سرور', 'error');
+            showToast('Server connection error', 'error');
         });
     })
     .catch(function(error) {
-        showToast('خطا در ارتباط با سرور', 'error');
+        showToast('Server connection error', 'error');
     });
 }
 
@@ -292,14 +292,14 @@ function confirmDeleteAllBackups() {
     .then(function(response) { return response.json(); })
     .then(function(result) {
         if (result.success) {
-            showToast(result.message || 'همه بک‌آپ‌ها با موفقیت حذف شدند', 'success');
+            showToast(result.message || 'All backups deleted successfully', 'success');
             setTimeout(function() { location.reload(); }, 1000);
         } else {
-            showToast('خطا در حذف بکآپ‌ها: ' + result.message, 'error');
+            showToast('Error deleting backups: ' + result.message, 'error');
         }
     })
     .catch(function(error) {
-        showToast('خطا در ارتباط با سرور', 'error');
+        showToast('Server connection error', 'error');
     });
 }
 
