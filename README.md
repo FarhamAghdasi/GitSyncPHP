@@ -4,31 +4,16 @@
 
 - [Description](#description)
 - [Features](#features)
+- [Project Structure](#project-structure)
 - [Installation](#installation)
-  - [Step 1: Copy Files to /git Folder](#step-1-copy-files-to-git-folder)
-  - [Step 2: Configure .env File](#step-2-configure-env-file)
-  - [Step 3: Security Setup](#step-3-security-setup)
-- [Usage Scenarios](#usage-scenarios)
-  - [Scenario 1: Subdirectory of Main Project](#scenario-1-subdirectory-of-main-project)
-  - [Scenario 2: Root of Subdomain](#scenario-2-root-of-subdomain)
-  - [Scenario 3: Subfolder of Public HTML](#scenario-3-subfolder-of-public-html)
-- [Configuration](#configuration)
-  - [.env Settings](#env-settings)
-  - [GitHub Token](#github-token)
-  - [Telegram Setup](#telegram-setup)
-- [Security](#security)
-  - [Secret Key Method](#secret-key-method)
-  - [IP Whitelist Method](#ip-whitelist-method)
 - [Usage](#usage)
-  - [Web Browser](#web-browser)
-  - [CLI Execution](#cli-execution)
-  - [Cron Job Automation](#cron-job-automation)
+- [Bundler Script](#bundler-script)
+- [Configuration](#configuration)
+- [Security](#security)
 - [Backup Management](#backup-management)
-- [Logs](#logs)
+- [Toast Notifications](#toast-notifications)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
-- [Contributing](#contributing)
-- [Contact](#contact)
 
 ## Description
 
@@ -43,6 +28,23 @@ This PHP script automatically updates your project directory from a GitHub repos
 - 🌐 **Web UI** for easy management
 - 📜 **Complete logging** of all operations
 - ⚡ **Lightweight** - minimal dependencies
+- 🎨 **Component-based architecture** - CSS, JS, and HTML separated
+- 🍞 **Toast notifications** - modern notification system
+
+## Project Structure
+
+```
+GitSyncPHP/
+├── git.php              (main file - uses external assets)
+├── bundler.php          (generates single combined file)
+├── .env.example
+├── README.md
+└── assets/
+    ├── style.css        (all CSS styles)
+    ├── header.php       (HTML head section)
+    ├── footer.php       (modal dialogs and script include)
+    └── script.js        (JavaScript with toast notifications)
+```
 
 ## Installation
 
@@ -55,7 +57,12 @@ your-project/
 ├── /git/
 │   ├── git.php
 │   ├── .env.example
-│   └── .gitignore
+│   ├── bundler.php
+│   └── /assets/
+│       ├── style.css
+│       ├── header.php
+│       ├── footer.php
+│       └── script.js
 ├── /your-app-files/
 └── index.php
 ```
@@ -82,76 +89,69 @@ Create a secret key file for secure access:
 echo "your-secure-random-key-here" > .update_key
 ```
 
-## Usage Scenarios
+## Usage
 
-### Scenario 1: Subdirectory of Main Project
+### Web Browser
 
-Your main application is at the root, and GitSyncPHP is in `/git`:
+Access the update panel:
 
-```
-/var/www/html/your-project/
-├── /git/
-│   ├── git.php
-│   ├── .env
-│   ├── .update_key
-│   └── /__backups/
-├── /src/
-├── /public/
-├── index.php
-└── .env
-```
-
-**Access URL:**
 ```
 https://yourdomain.com/your-project/git/git.php?key=your-secure-key
 ```
 
-### Scenario 2: Root of Subdomain
+From the web interface you can:
+- Check for updates
+- View current version
+- View commit history
+- Run updates manually
+- Manage backups (including "Delete All" button)
+- View logs
+- Change settings
 
-The entire subdomain is dedicated to auto-updates:
+### CLI Execution
 
-```
-/var/www/html/updates.yourdomain.com/
-├── /git/
-│   ├── git.php
-│   ├── .env
-│   ├── .update_key
-│   └── /__backups/
-├── index.php (optional redirect)
-└── .htaccess
-```
+```bash
+# Navigate to git directory
+cd /path/to/your-project/git/
 
-**Access URL:**
-```
-https://updates.yourdomain.com/git/git.php?key=your-secure-key
-```
+# Run update
+php git.php
 
-**Recommended .env configuration:**
-```env
-TARGET_DIR=/var/www/html/updates.yourdomain.com
-SCRIPT_DIR=/var/www/html/updates.yourdomain.com/git
+# Check logs
+cat update_log.txt
 ```
 
-### Scenario 3: Subfolder of Public HTML
+### Cron Job Automation
 
-Shared hosting with public_html folder:
-
-```
-/home/username/public_html/
-├── /your-app/
-│   ├── /git/
-│   │   ├── git.php
-│   │   ├── .env
-│   │   ├── .update_key
-│   │   └── /__backups/
-│   ├── /application/
-│   └── index.php
+**Every hour:**
+```bash
+0 * * * * /usr/bin/php /path/to/your-project/git/git.php > /dev/null 2>&1
 ```
 
-**Access URL:**
+**Daily at 3 AM:**
+```bash
+0 3 * * * /usr/bin/php /path/to/your-project/git/git.php > /dev/null 2>&1
 ```
-https://yourdomain.com/your-app/git/git.php?key=your-secure-key
+
+## Bundler Script
+
+The `bundler.php` script generates a single combined file with all CSS and JS inlined. This is useful when you want a single file deployment.
+
+### Generate Bundle
+
+```bash
+# Generate default bundle.php
+php bundler.php
+
+# Generate custom filename
+php bundler.php my-bundle.php
 ```
+
+The bundler will:
+1. Read all assets from the `assets/` folder
+2. Combine them into a single PHP file
+3. Include all CSS in `<style>` tags
+4. Include all JavaScript in `<script>` tags
 
 ## Configuration
 
@@ -186,27 +186,6 @@ LOG_FILE=update_log.txt
 VERSION_FILE=.version
 EXCLUDE_FILES=git,.env,.update_key,.ip_whitelist,__backups,*.log,update_log.txt
 ```
-
-### GitHub Token
-
-1. Go to [GitHub Settings → Personal Access Tokens](https://github.com/settings/tokens)
-2. Click **Generate new token (classic)**
-3. Set expiration date
-4. Select `repo` scope for private repositories or `public_repo` for public repositories
-5. Copy the generated token
-
-### Telegram Setup
-
-**Get Bot Token:**
-1. Open Telegram and search for @BotFather
-2. Send `/newbot` command
-3. Follow instructions to create a new bot
-4. Copy the bot token
-
-**Get Chat ID:**
-1. Search for @userinfobot on Telegram
-2. Start a conversation
-3. Your Chat ID will be displayed
 
 ## Security
 
@@ -244,56 +223,6 @@ Add IP addresses (one per line):
 
 **Note:** You can use both methods together for maximum security.
 
-## Usage
-
-### Web Browser
-
-Access the update panel:
-
-```
-https://yourdomain.com/your-project/git/git.php?key=your-secure-key
-```
-
-From the web interface you can:
-- Check for updates
-- View current version
-- View commit history
-- Run updates manually
-- Manage backups
-- View logs
-- Change settings
-
-### CLI Execution
-
-```bash
-# Navigate to git directory
-cd /path/to/your-project/git/
-
-# Run update
-php git.php
-
-# Check logs
-cat update_log.txt
-```
-
-### Cron Job Automation
-
-**Every hour:**
-```bash
-0 * * * * /usr/bin/php /path/to/your-project/git/git.php > /dev/null 2>&1
-```
-
-**Daily at 3 AM:**
-```bash
-0 3 * * * /usr/bin/php /path/to/your-project/git/git.php > /dev/null 2>&1
-
-```
-
-**Weekly on Sundays at midnight:**
-```bash
-0 0 * * 0 /usr/bin/php /path/to/your-project/git/git.php > /dev/null 2>&1
-```
-
 ## Backup Management
 
 Backups are automatically created in the `__backups/` directory before each update.
@@ -303,53 +232,22 @@ Backups are automatically created in the `__backups/` directory before each upda
 - ZIP format compression
 - Timestamped filenames
 - Secure with .htaccess protection
+- **Delete All** button to remove all backups at once
 
-**Backup Structure:**
-```
-git/
-├── /__backups/
-│   ├── .htaccess
-│   ├── backup_2024-01-15_120000.zip
-│   ├── backup_2024-01-16_120000.zip
-│   └── backup_2024-01-17_120000.zip
-```
+## Toast Notifications
 
-**Download/Restore:**
-1. Access web UI
-2. Go to Backups section
-3. Click download to save locally
-4. Extract ZIP to restore files
+All browser alerts have been replaced with modern toast notifications:
 
-## Logs
+- ✅ Success notifications (green)
+- ❌ Error notifications (red)
+- ⚠️ Warning notifications (orange)
+- ℹ️ Info notifications (blue)
 
-All operations are logged in `update_log.txt`:
-
-```bash
-# View complete log
-cat update_log.txt
-
-# View last 50 lines
-tail -50 update_log.txt
-
-# View in real-time
-tail -f update_log.txt
-
-# Filter for errors only
-grep "\[ERROR\]" update_log.txt
-
-# Filter for success only
-grep "\[SUCCESS\]" update_log.txt
-
-# Filter for specific date
-grep "2024-01-15" update_log.txt
-```
-
-**Log Levels:**
-- `[INFO]` - General information
-- `[SUCCESS]` - Successful operations
-- `[WARNING]` - Warnings (non-critical)
-- `[ERROR]` - Errors (action may have failed)
-- `[DEBUG]` - Debug information
+Toast features:
+- Animated slide-in and fade-out
+- Auto-dismiss after 4 seconds
+- Manual close button
+- Click to dismiss
 
 ## Troubleshooting
 
@@ -405,34 +303,9 @@ sudo yum install php-curl
 sudo service httpd restart
 ```
 
-### Update Not Working
-
-**Checklist:**
-1. Verify .env file exists and has correct settings
-2. Check file permissions (git directory should be writable)
-3. Review update_log.txt for errors
-4. Test GitHub API access manually
-5. Ensure PHP has write permissions to target directory
-
 ## License
 
 This project is released under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Contact
-
-- **Author:** farhamaghdasi
-- **GitHub:** [@farhamaghdasi](https://github.com/farhamaghdasi)
-- **Repository:** [GitSyncPHP](https://github.com/farhamaghdasi/GitSyncPHP)
 
 ---
 
