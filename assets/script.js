@@ -98,6 +98,9 @@ document.getElementById('settingsForm').addEventListener('submit', function(e) {
     
     fetch('', {
         method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         body: formData
     })
     .then(function(response) { return response.json(); })
@@ -144,6 +147,9 @@ function runUpdate() {
     
     fetch('', {
         method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         body: formData
     })
     .then(function(response) { return response.json(); })
@@ -221,6 +227,9 @@ function deleteBackup(filename) {
     
     fetch('', {
         method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         body: formData
     })
     .then(function(response) { return response.json(); })
@@ -275,6 +284,9 @@ function confirmDeleteAllBackups() {
     
     fetch('', {
         method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
         body: formData
     })
     .then(function(response) { return response.json(); })

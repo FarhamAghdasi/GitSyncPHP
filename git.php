@@ -151,10 +151,21 @@ function getBackups() {
 // LOGGING FUNCTIONS
 // ============================
 
+/**
+ * Check if current request is an AJAX request
+ */
+function isAjaxRequest() {
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+           strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+}
+
 function logInfo($message) {
     $timestamp = date('Y-m-d H:i:s');
     $logEntry = "[$timestamp] [INFO] $message\n";
-    echo $logEntry;
+    // Only echo if not an AJAX request
+    if (!isAjaxRequest()) {
+        echo $logEntry;
+    }
     $logFile = defined('LOG_FILE') ? LOG_FILE : SCRIPT_DIR . '/update_log.txt';
     @file_put_contents($logFile, $logEntry, FILE_APPEND);
 }
@@ -162,15 +173,21 @@ function logInfo($message) {
 function logError($message) {
     $timestamp = date('Y-m-d H:i:s');
     $logEntry = "[$timestamp] [ERROR] ❌ $message\n";
-    echo $logEntry;
+    // Only echo if not an AJAX request
+    if (!isAjaxRequest()) {
+        echo $logEntry;
+    }
     $logFile = defined('LOG_FILE') ? LOG_FILE : SCRIPT_DIR . '/update_log.txt';
-    @file_put_contents($logFile, $logEntry, FILE_APPEND);
+    @file_put_contents($logEntry, $logEntry, FILE_APPEND);
 }
 
 function logSuccess($message) {
     $timestamp = date('Y-m-d H:i:s');
     $logEntry = "[$timestamp] [SUCCESS] ✅ $message\n";
-    echo $logEntry;
+    // Only echo if not an AJAX request
+    if (!isAjaxRequest()) {
+        echo $logEntry;
+    }
     $logFile = defined('LOG_FILE') ? LOG_FILE : SCRIPT_DIR . '/update_log.txt';
     @file_put_contents($logFile, $logEntry, FILE_APPEND);
 }
@@ -178,7 +195,10 @@ function logSuccess($message) {
 function logWarning($message) {
     $timestamp = date('Y-m-d H:i:s');
     $logEntry = "[$timestamp] [WARNING] ⚠️ $message\n";
-    echo $logEntry;
+    // Only echo if not an AJAX request
+    if (!isAjaxRequest()) {
+        echo $logEntry;
+    }
     $logFile = defined('LOG_FILE') ? LOG_FILE : SCRIPT_DIR . '/update_log.txt';
     @file_put_contents($logFile, $logEntry, FILE_APPEND);
 }
@@ -186,6 +206,7 @@ function logWarning($message) {
 function logDebug($message) {
     $timestamp = date('Y-m-d H:i:s');
     $logEntry = "[$timestamp] [DEBUG] 🔍 $message\n";
+    // Never echo debug messages, only log to file
     $logFile = defined('LOG_FILE') ? LOG_FILE : SCRIPT_DIR . '/update_log.txt';
     @file_put_contents($logFile, $logEntry, FILE_APPEND);
 }

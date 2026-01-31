@@ -243,6 +243,16 @@ $parts[] = "\$logContent = @file_get_contents(LOG_FILE) ?: '';";
 $parts[] = "?>";
 $parts[] = "";
 
+// Clean up header content - remove duplicate HTML structure since we build our own
+$headerClean = preg_replace('/<!DOCTYPE html>.*?<body>/s', '', $headerContent);
+$headerClean = preg_replace('/<\/body>.*?<\/html>/s', '', $headerClean);
+$headerClean = preg_replace('/<link rel="stylesheet" href="assets\/style\.css">/', '', $headerClean);
+
+// Clean up footer content - remove script src since we inline it
+$footerClean = preg_replace('/<script src="assets\/script\.js"><\/script>/', '', $footerContent);
+$footerClean = preg_replace('/<!DOCTYPE html>.*?<body>/s', '', $footerClean);
+$footerClean = preg_replace('/<\/body>.*?<\/html>/s', '', $footerClean);
+
 // Part 3: HTML with inline CSS
 $htmlStart = '<!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -260,7 +270,7 @@ $htmlStart = '<!DOCTYPE html>
     <div class="toast-container" id="toastContainer"></div>
     
     <div class="container">
-' . $headerContent . '
+' . $headerClean . '
 
         <!-- Main Content -->
         <div class="container">
@@ -435,7 +445,7 @@ $htmlStart = '<!DOCTYPE html>
             </div>
         </div>
 
-' . $footerContent . '
+' . $footerClean . '
 
         <script>
 ' . $jsContent . '
