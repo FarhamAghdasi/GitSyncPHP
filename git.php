@@ -2,8 +2,8 @@
 /**
  * GitHub Auto-Update Script for Shared Hosting
  * 
- * This script updates the wallet directory from a GitHub repository.
- * Script is placed in /wallet/git/ and updates /wallet/
+ * This script updates the project directory from a GitHub repository.
+ * Script is placed in /project-name/git/ and updates /project-name/
  */
 
 // ============================
@@ -25,7 +25,7 @@ define('GITHUB_TOKEN', (string)($config['GITHUB_TOKEN'] ?? ''));
 /** @var string REPO_USER */
 define('REPO_USER', (string)($config['REPO_USER'] ?? 'farhamaghdasi'));
 /** @var string REPO_NAME */
-define('REPO_NAME', (string)($config['REPO_NAME'] ?? 'trust-wallet-balance-checker'));
+define('REPO_NAME', (string)($config['REPO_NAME'] ?? 'project-name'));
 /** @var string BRANCH */
 define('BRANCH', (string)($config['BRANCH'] ?? 'main'));
 /** @var string TELEGRAM_BOT_TOKEN */
@@ -56,7 +56,7 @@ function loadConfig() {
     $defaultConfig = [
         'GITHUB_TOKEN' => '',
         'REPO_USER' => 'farhamaghdasi',
-        'REPO_NAME' => 'trust-wallet-balance-checker',
+        'REPO_NAME' => 'project-name',
         'BRANCH' => 'main',
         'TELEGRAM_BOT_TOKEN' => '',
         'TELEGRAM_CHAT_ID' => '',
@@ -178,7 +178,7 @@ function logError($message) {
         echo $logEntry;
     }
     $logFile = defined('LOG_FILE') ? LOG_FILE : SCRIPT_DIR . '/update_log.txt';
-    @file_put_contents($logEntry, $logEntry, FILE_APPEND);
+    @file_put_contents($logFile, $logEntry, FILE_APPEND);
 }
 
 function logSuccess($message) {
@@ -743,6 +743,9 @@ function sendTelegramNotification($commitInfo, $extractResult) {
         return false;
     }
     
+    // Get the request URL
+    $requestUrl = 'http' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://' . ($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? '');
+    
     // Format as requested by user
     $message = "🚀 *Website Update Successful!*\n\n";
     $message .= "📦 *Repository:* " . REPO_USER . "/" . REPO_NAME . "\n";
@@ -751,7 +754,8 @@ function sendTelegramNotification($commitInfo, $extractResult) {
     $message .= "📝 *Message:* " . $commitInfo['message'] . "\n";
     $message .= "👤 *Author:* " . $commitInfo['author'] . "\n";
     $message .= "📊 *Files:* " . $extractResult['files_updated'] . " updated\n";
-    $message .= "🕐 *Time:* " . date('Y-m-d H:i:s');
+    $message .= "🕐 *Time:* " . date('Y-m-d H:i:s') . "\n";
+    $message .= "🔗 *URL:* " . $requestUrl;
     
     $telegramUrl = "https://api.telegram.org/bot" . TELEGRAM_BOT_TOKEN . "/sendMessage";
     
@@ -761,9 +765,21 @@ function sendTelegramNotification($commitInfo, $extractResult) {
         'parse_mode' => 'Markdown'
     ];
     
+    logDebug("Sending Telegram notification to " . TELEGRAM_CHAT_ID);
+    logDebug("Message: " . substr($message, 0, 100) . "...");
+    
     $response = fetchUrl($telegramUrl, [], 'POST', $data);
     
-    return $response && $response['status_code'] === 200;
+    if ($response && $response['status_code'] === 200) {
+        logDebug("Telegram notification sent successfully");
+        return true;
+    } else {
+        logError("Telegram notification failed: " . ($response['error'] ?? 'Unknown error'));
+        if ($response && $response['body']) {
+            logDebug("Telegram response: " . $response['body']);
+        }
+        return false;
+    }
 }
 
 function fetchUrl($url, $headers = [], $method = 'GET', $postData = null) {
@@ -917,7 +933,7 @@ if ($action === 'save_settings' && securityCheck()) {
     $newConfig = [
         'GITHUB_TOKEN' => $_POST['GITHUB_TOKEN'] ?? '',
         'REPO_USER' => $_POST['REPO_USER'] ?? 'farhamaghdasi',
-        'REPO_NAME' => $_POST['REPO_NAME'] ?? 'trust-wallet-balance-checker',
+        'REPO_NAME' => $_POST['REPO_NAME'] ?? 'project-name',
         'BRANCH' => $_POST['BRANCH'] ?? 'main',
         'TELEGRAM_BOT_TOKEN' => $_POST['TELEGRAM_BOT_TOKEN'] ?? '',
         'TELEGRAM_CHAT_ID' => $_POST['TELEGRAM_CHAT_ID'] ?? '',
