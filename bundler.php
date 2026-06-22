@@ -255,7 +255,7 @@ $footerClean = preg_replace('/<\/body>.*?<\/html>/s', '', $footerClean);
 
 // Part 3: HTML with inline CSS
 $htmlStart = '<!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

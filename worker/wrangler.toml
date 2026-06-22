@@ -1,0 +1,13 @@
+# ============================================
+# CLOUDFLARE WORKER CONFIGURATION
+# ============================================
+# This file configures the Cloudflare Worker for GitHub/Telegram Proxy
+# ============================================
+
+# ============================================
+# BASIC CONFIGURATION
+# ============================================
+
+name = "github-telegram-proxy"
+main = "src/index.js"
+compatibility_date = "2026-06-22"

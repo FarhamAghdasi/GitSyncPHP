@@ -1,4 +1,4 @@
-    <!-- Settings Modal -->
+<!-- Settings Modal -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -50,6 +50,43 @@
                             <input type="checkbox" name="DELETE_EXTRACTED_FILES" <?php echo DELETE_EXTRACTED_FILES ? 'checked' : ''; ?>>
                             <span>DELETE_EXTRACTED_FILES</span>
                         </label>
+                    </div>
+                    
+                    <!-- ============================================ -->
+                    <!-- TARGET DIRECTORY SETTINGS (NEW) -->
+                    <!-- ============================================ -->
+                    <div class="form-group" style="grid-column: 1 / -1; border-top: 2px solid #eee; padding-top: 20px; margin-top: 10px;">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">📂 Target Directory</h4>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>TARGET_DIR</label>
+                        <input type="text" name="TARGET_DIR" value="<?php echo htmlspecialchars(TARGET_DIR); ?>" placeholder="/home/user/public_html/project">
+                        <small style="display: block; color: #999; margin-top: 5px;">
+                            Directory where files will be updated (e.g., <?php echo htmlspecialchars(dirname(__DIR__)); ?>)
+                        </small>
+                    </div>
+                    
+                    <!-- ============================================ -->
+                    <!-- PROXY SETTINGS -->
+                    <!-- ============================================ -->
+                    <div class="form-group" style="grid-column: 1 / -1; border-top: 2px solid #eee; padding-top: 20px; margin-top: 10px;">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">🔀 Proxy Settings</h4>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-group">
+                            <input type="checkbox" name="USE_PROXY" <?php echo USE_PROXY ? 'checked' : ''; ?>>
+                            <span>Enable Cloudflare Worker Proxy</span>
+                        </label>
+                        <small style="display: block; color: #999; margin-top: 5px;">
+                            Enable if you cannot access GitHub API directly
+                        </small>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>PROXY_URL</label>
+                        <input type="text" name="PROXY_URL" value="<?php echo htmlspecialchars(PROXY_URL); ?>" placeholder="https://github-proxy.your-subdomain.workers.dev">
+                        <small style="display: block; color: #999; margin-top: 5px;">
+                            Your Cloudflare Worker URL
+                        </small>
                     </div>
                 </div>
                 <div class="modal-footer">
