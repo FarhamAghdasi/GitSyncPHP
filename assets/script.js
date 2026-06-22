@@ -1,7 +1,7 @@
 // GitSyncPHP JavaScript
 
 // Global variables
-var UPDATE_KEY = '<?php echo htmlspecialchars($key); ?>';
+// UPDATE_KEY is set via inline <script> in footer.php (PHP-processed)
 
 // Toast Notification System
 function showToast(message, type, duration) {

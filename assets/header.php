@@ -8,7 +8,5 @@
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-    
     <div class="container">

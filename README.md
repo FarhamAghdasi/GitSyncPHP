@@ -7,7 +7,6 @@
 - [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Bundler Script](#bundler-script)
 - [Configuration](#configuration)
 - [Security](#security)
 - [Backup Management](#backup-management)
@@ -21,29 +20,46 @@ This PHP script automatically updates your project directory from a GitHub repos
 
 ## Features
 
-- 🚀 **Automatic updates** from GitHub
-- 💾 **Automatic backup** before updating
-- 📱 **Telegram notifications** after successful updates
-- 🔒 **Security** with secret key and IP whitelist
-- 🌐 **Web UI** for easy management
-- 📜 **Complete logging** of all operations
-- ⚡ **Lightweight** - minimal dependencies
-- 🎨 **Component-based architecture** - CSS, JS, and HTML separated
-- 🍞 **Toast notifications** - modern notification system
+- Automatic updates from GitHub
+- Automatic backup before updating
+- Telegram notifications after successful updates
+- Security with secret key and IP whitelist
+- Web UI for easy management
+- Complete logging of all operations
+- Lightweight - minimal dependencies
+- Component-based architecture with modular PHP backend
+- Dark glassmorphism UI
+- Toast notification system
 
 ## Project Structure
 
 ```
 GitSyncPHP/
-├── git.php              (main file - uses external assets)
-├── bundler.php          (generates single combined file)
+├── git.php                          (main controller)
+├── lib/
+│   ├── config.php                   (configuration + constants)
+│   ├── logger.php                   (logging functions)
+│   ├── github.php                   (GitHub API interaction)
+│   ├── updater.php                  (update + backup + extract)
+│   ├── telegram.php                 (Telegram notifications)
+│   ├── http.php                     (HTTP client)
+│   └── security.php                 (security checks)
+├── assets/
+│   ├── header.php                   (HTML head section)
+│   ├── footer.php                   (modal dialogs + script include)
+│   ├── style.css                    (dark glass CSS)
+│   ├── script.js                    (JavaScript)
+│   └── components/
+│       ├── header-bar.php           (header section)
+│       ├── status-cards.php         (status cards grid)
+│       ├── commit-details.php       (commit details table)
+│       ├── update-banner.php        (update notification banner)
+│       ├── operations-card.php      (operations panel)
+│       ├── backups-card.php         (backups list)
+│       └── log-card.php             (log viewer)
+├── .env
 ├── .env.example
-├── README.md
-└── assets/
-    ├── style.css        (all CSS styles)
-    ├── header.php       (HTML head section)
-    ├── footer.php       (modal dialogs and script include)
-    └── script.js        (JavaScript with toast notifications)
+└── README.md
 ```
 
 ## Installation
@@ -56,13 +72,21 @@ Copy the entire GitSyncPHP folder contents to your project's `/git` directory:
 your-project/
 ├── /git/
 │   ├── git.php
-│   ├── .env.example
-│   ├── bundler.php
-│   └── /assets/
-│       ├── style.css
-│       ├── header.php
-│       ├── footer.php
-│       └── script.js
+│   ├── lib/
+│   │   ├── config.php
+│   │   ├── logger.php
+│   │   ├── github.php
+│   │   ├── updater.php
+│   │   ├── telegram.php
+│   │   ├── http.php
+│   │   └── security.php
+│   ├── assets/
+│   │   ├── header.php
+│   │   ├── footer.php
+│   │   ├── style.css
+│   │   ├── script.js
+│   │   └── components/
+│   └── .env.example
 ├── /your-app-files/
 └── index.php
 ```
@@ -70,13 +94,8 @@ your-project/
 ### Step 2: Configure .env File
 
 ```bash
-# Navigate to git directory
 cd your-project/git/
-
-# Copy template file
 cp .env.example .env
-
-# Edit the configuration
 nano .env
 ```
 
@@ -85,7 +104,6 @@ nano .env
 Create a secret key file for secure access:
 
 ```bash
-# Generate a secure random key
 echo "your-secure-random-key-here" > .update_key
 ```
 
@@ -104,21 +122,15 @@ From the web interface you can:
 - View current version
 - View commit history
 - Run updates manually
-- Manage backups (including "Delete All" button)
+- Manage backups
 - View logs
 - Change settings
 
 ### CLI Execution
 
 ```bash
-# Navigate to git directory
 cd /path/to/your-project/git/
-
-# Run update
 php git.php
-
-# Check logs
-cat update_log.txt
 ```
 
 ### Cron Job Automation
@@ -133,55 +145,27 @@ cat update_log.txt
 0 3 * * * /usr/bin/php /path/to/your-project/git/git.php > /dev/null 2>&1
 ```
 
-## Bundler Script
-
-The `bundler.php` script generates a single combined file with all CSS and JS inlined. This is useful when you want a single file deployment.
-
-### Generate Bundle
-
-```bash
-# Generate default bundle.php
-php bundler.php
-
-# Generate custom filename
-php bundler.php my-bundle.php
-```
-
-The bundler will:
-1. Read all assets from the `assets/` folder
-2. Combine them into a single PHP file
-3. Include all CSS in `<style>` tags
-4. Include all JavaScript in `<script>` tags
-
 ## Configuration
 
 ### .env Settings
 
 ```env
-# ==========================================
 # GitHub Repository Configuration
-# ==========================================
 GITHUB_TOKEN=ghp_your_github_token_here
 REPO_USER=your-github-username
 REPO_NAME=your-repository-name
 BRANCH=main
 
-# ==========================================
 # Telegram Notifications (Optional)
-# ==========================================
 TELEGRAM_BOT_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
 TELEGRAM_CHAT_ID=-1001234567890
 
-# ==========================================
 # Backup Settings
-# ==========================================
 BACKUP_BEFORE_UPDATE=true
 BACKUP_DIR=__backups
 DELETE_EXTRACTED_FILES=true
 
-# ==========================================
 # Files & Paths
-# ==========================================
 LOG_FILE=update_log.txt
 VERSION_FILE=.version
 EXCLUDE_FILES=git,.env,.update_key,.ip_whitelist,__backups,*.log,update_log.txt
@@ -194,11 +178,7 @@ EXCLUDE_FILES=git,.env,.update_key,.ip_whitelist,__backups,*.log,update_log.txt
 Create a `.update_key` file with a random secure string:
 
 ```bash
-# Generate a random key
 openssl rand -base64 32 > .update_key
-
-# Or manually create
-echo "complex-random-string-at-least-32-chars" > .update_key
 ```
 
 **Access with key:**
@@ -232,16 +212,16 @@ Backups are automatically created in the `__backups/` directory before each upda
 - ZIP format compression
 - Timestamped filenames
 - Secure with .htaccess protection
-- **Delete All** button to remove all backups at once
+- Delete All button to remove all backups at once
 
 ## Toast Notifications
 
 All browser alerts have been replaced with modern toast notifications:
 
-- ✅ Success notifications (green)
-- ❌ Error notifications (red)
-- ⚠️ Warning notifications (orange)
-- ℹ️ Info notifications (blue)
+- Success notifications (green)
+- Error notifications (red)
+- Warning notifications (orange)
+- Info notifications (blue)
 
 Toast features:
 - Animated slide-in and fade-out
@@ -257,7 +237,6 @@ Toast features:
 
 **Solution:**
 ```bash
-# Check token validity
 curl -H "Authorization: token YOUR_TOKEN" https://api.github.com/user
 ```
 
@@ -267,7 +246,6 @@ curl -H "Authorization: token YOUR_TOKEN" https://api.github.com/user
 
 **Solution:**
 ```bash
-# Check rate limit
 curl -H "Authorization: token YOUR_TOKEN" https://api.github.com/rate_limit
 ```
 
@@ -309,4 +287,4 @@ This project is released under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-**Made with ❤️ for the PHP Community**
+**Made with for the PHP Community**
