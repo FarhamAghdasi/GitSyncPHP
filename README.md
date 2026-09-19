@@ -11,8 +11,18 @@
 - [Security](#security)
 - [Backup Management](#backup-management)
 - [Toast Notifications](#toast-notifications)
+- [Modals](#modals)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
+- [Screenshots](#screenshots)
+
+## Screenshots
+
+> Place screenshots in the `/screenshots` folder of the repository.
+
+| Overview |
+|----------|
+| ![GitSyncPHP Dashboard](/screenshots/dashboard.png) |
 
 ## Description
 
@@ -227,7 +237,15 @@ Toast features:
 - Animated slide-in and fade-out
 - Auto-dismiss after 4 seconds
 - Manual close button
-- Click to dismiss
+- Text-based status tags: `[OK]`, `[ERR]`, `[!]`, `[i]` (no emojis)
+
+## Modals
+
+Confirmation dialogs use animated modals instead of native browser dialogs:
+- Settings modal
+- Confirm update modal
+- Confirm delete all backups modal
+- Confirm clear log modal
 
 ## Troubleshooting
 
