@@ -28,7 +28,7 @@ if ($action === 'save_settings' && securityCheck()) {
     $newConfig = [
         'GITHUB_TOKEN' => $_POST['GITHUB_TOKEN'] ?? '',
         'REPO_USER' => $_POST['REPO_USER'] ?? 'farhamaghdasi',
-        'REPO_NAME' => $_POST['REPO_NAME'] ?? 'arash-laravel-panel',
+        'REPO_NAME' => $_POST['REPO_NAME'] ?? 'gitsyncphp',
         'BRANCH' => $_POST['BRANCH'] ?? 'main',
         'TELEGRAM_BOT_TOKEN' => $_POST['TELEGRAM_BOT_TOKEN'] ?? '',
         'TELEGRAM_CHAT_ID' => $_POST['TELEGRAM_CHAT_ID'] ?? '',

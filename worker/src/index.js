@@ -50,7 +50,7 @@ export default {
                 const queryString = url.searchParams.get('query') || '';
                 const fullUrl = githubUrl + (queryString ? '?' + queryString : '');
                 
-                console.log('🔀 Proxy GitHub Request:', {
+                console.log('[PROXY] GitHub Request:', {
                     url: fullUrl,
                     method: method,
                     headers: Object.fromEntries(headers)
@@ -81,7 +81,7 @@ export default {
                     returnHeaders['Content-Type'] = contentType || 'application/json';
                 }
 
-                console.log('📡 GitHub Response:', {
+                console.log('[RESPONSE] GitHub Response:', {
                     status: response.status,
                     statusText: response.statusText,
                     contentType: contentType,
@@ -117,7 +117,7 @@ export default {
                 
                 const telegramUrl = `${ALLOWED_ENDPOINTS.telegram}/bot${token}${pathParam}`;
                 
-                console.log('🔀 Proxy Telegram Request:', {
+                console.log('[PROXY] Telegram Request:', {
                     url: telegramUrl,
                     method: method
                 });
@@ -185,7 +185,7 @@ export default {
             );
             
         } catch (error) {
-            console.error('❌ Worker Error:', error);
+            console.error('[ERROR] Worker Error:', error);
             return new Response(
                 JSON.stringify({
                     error: 'Internal Server Error',

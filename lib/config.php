@@ -9,7 +9,7 @@ $config = loadConfig();
 
 define('GITHUB_TOKEN', (string)($config['GITHUB_TOKEN'] ?? ''));
 define('REPO_USER', (string)($config['REPO_USER'] ?? 'farhamaghdasi'));
-define('REPO_NAME', (string)($config['REPO_NAME'] ?? 'arash-laravel-panel'));
+define('REPO_NAME', (string)($config['REPO_NAME'] ?? 'gitsyncphp'));
 define('BRANCH', (string)($config['BRANCH'] ?? 'main'));
 define('TELEGRAM_BOT_TOKEN', (string)($config['TELEGRAM_BOT_TOKEN'] ?? ''));
 define('TELEGRAM_CHAT_ID', (string)($config['TELEGRAM_CHAT_ID'] ?? ''));
@@ -38,7 +38,7 @@ function loadConfig() {
     $defaultConfig = [
         'GITHUB_TOKEN' => '',
         'REPO_USER' => 'farhamaghdasi',
-        'REPO_NAME' => 'arash-laravel-panel',
+        'REPO_NAME' => 'gitsyncphp',
         'BRANCH' => 'main',
         'TELEGRAM_BOT_TOKEN' => '',
         'TELEGRAM_CHAT_ID' => '',

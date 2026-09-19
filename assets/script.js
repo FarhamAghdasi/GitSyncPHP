@@ -13,16 +13,16 @@ function showToast(message, type, duration) {
     toast.className = 'toast ' + type;
     
     var icons = {
-        success: '✓',
-        error: '✗',
-        warning: '⚠',
-        info: 'ℹ'
+        success: '[OK]',
+        error: '[ERR]',
+        warning: '[!]',
+        info: '[i]'
     };
     
     toast.innerHTML = 
         '<span class="toast-icon">' + (icons[type] || icons.info) + '</span>' +
         '<span class="toast-message">' + message + '</span>' +
-        '<button class="toast-close" onclick="this.parentElement.remove()">×</button>';
+        '<button class="toast-close" onclick="this.parentElement.remove()">x</button>';
     
     container.appendChild(toast);
     
@@ -43,6 +43,21 @@ function scrollLogToBottom() {
 }
 
 scrollLogToBottom();
+
+// Show/hide masked sensitive field (token) values
+function toggleFieldVisibility(btn) {
+    var input = btn.previousElementSibling;
+    if (!input) return;
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.setAttribute('aria-label', 'Hide value');
+        btn.classList.add('active');
+    } else {
+        input.type = 'password';
+        btn.setAttribute('aria-label', 'Show value');
+        btn.classList.remove('active');
+    }
+}
 
 // Modal functions
 function showSettingsModal() {
@@ -190,28 +205,38 @@ function clearLog() {
     fetch('?action=get_log_size&key=' + UPDATE_KEY)
     .then(function(response) { return response.json(); })
     .then(function(sizeData) {
-        var confirmMessage = 'Do you want to clear the log?';
+        var confirmMessage = 'Are you sure you want to clear the log?';
         if (sizeData.size > 200) {
-            confirmMessage = 'Warning! Log file size is ' + sizeData.size + ' MB.\n\nAre you sure you want to clear it?';
+            confirmMessage = 'Warning! Log file size is ' + sizeData.size + ' MB. Are you sure you want to clear it?';
         }
-        
-        if (!confirm(confirmMessage)) {
-            return;
+        showConfirmClearLogModal(confirmMessage);
+    })
+    .catch(function(error) {
+        showToast('Server connection error', 'error');
+    });
+}
+
+function showConfirmClearLogModal(message) {
+    document.getElementById('confirmClearLogMessage').textContent = message;
+    document.getElementById('confirmClearLogModal').classList.add('active');
+}
+
+function closeConfirmClearLogModal() {
+    document.getElementById('confirmClearLogModal').classList.remove('active');
+}
+
+function confirmClearLog() {
+    closeConfirmClearLogModal();
+
+    fetch('?action=clear_log&key=' + UPDATE_KEY)
+    .then(function(response) { return response.json(); })
+    .then(function(result) {
+        if (result.success) {
+            showToast('Log cleared successfully', 'success');
+            setTimeout(function() { location.reload(); }, 1000);
+        } else {
+            showToast('Error clearing log: ' + result.message, 'error');
         }
-        
-        fetch('?action=clear_log&key=' + UPDATE_KEY)
-        .then(function(response) { return response.json(); })
-        .then(function(result) {
-            if (result.success) {
-                showToast('Log cleared successfully', 'success');
-                setTimeout(function() { location.reload(); }, 1000);
-            } else {
-                showToast('Error clearing log: ' + result.message, 'error');
-            }
-        })
-        .catch(function(error) {
-            showToast('Server connection error', 'error');
-        });
     })
     .catch(function(error) {
         showToast('Server connection error', 'error');

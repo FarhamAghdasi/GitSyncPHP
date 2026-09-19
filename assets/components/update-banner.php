@@ -1,27 +1,36 @@
 <?php if ($updateAvailable): ?>
-<!-- Update Banner -->
-<div class="update-banner glass-card">
-    <div class="info">
-        <h3>New Update Available!</h3>
-        <p>Version <?php echo htmlspecialchars(substr($latestCommit['sha'], 0, 7)); ?> is ready to install</p>
-        <?php if ($commitDetails): ?>
-        <p style="font-size: 13px; opacity: 0.8; margin-top: 5px;">
-            <?php echo $commitDetails['stats']['files_changed']; ?> files changed
-            (+<?php echo $commitDetails['stats']['total_additions']; ?>/<?php echo $commitDetails['stats']['total_deletions']; ?>)
-        </p>
-        <?php endif; ?>
+<!-- Health Banner: update available -->
+<div class="health-banner pending section-gap">
+    <div class="health-left">
+        <div class="health-icon"><?php echo icon('refresh', 19); ?></div>
+        <div class="health-text">
+            <h3>New Update Available</h3>
+            <p>
+                Version <?php echo htmlspecialchars(substr($latestCommit['sha'], 0, 7)); ?> is ready to install
+                <?php if ($commitDetails): ?>
+                    &nbsp;·&nbsp;<?php echo $commitDetails['stats']['files_changed']; ?> files changed
+                    (+<?php echo $commitDetails['stats']['total_additions']; ?>/-<?php echo $commitDetails['stats']['total_deletions']; ?>)
+                <?php endif; ?>
+            </p>
+        </div>
     </div>
-    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <button class="btn btn-success" onclick="startUpdate()">Start Update</button>
-        <button class="btn btn-ghost" onclick="showSettingsModal()">Settings</button>
+    <div class="health-actions">
+        <button class="btn btn-success" onclick="startUpdate()"><?php echo icon('download', 15); ?> Start Update</button>
+        <button class="btn btn-ghost" onclick="showSettingsModal()"><?php echo icon('settings', 15); ?> Settings</button>
     </div>
 </div>
 <?php else: ?>
-<div class="update-banner glass-card" style="--banner-accent: var(--color-info);">
-    <div class="info">
-        <h3>System is Up to Date</h3>
-        <p>You are using the latest version</p>
+<!-- Health Banner: up to date -->
+<div class="health-banner ok section-gap">
+    <div class="health-left">
+        <div class="health-icon"><?php echo icon('shield', 19); ?></div>
+        <div class="health-text">
+            <h3>System is Up to Date</h3>
+            <p>Your application is running the latest version from GitHub.</p>
+        </div>
     </div>
-    <button class="btn btn-primary" onclick="forceUpdate()">Check Again</button>
+    <div class="health-actions">
+        <button class="btn btn-primary" onclick="forceUpdate()"><?php echo icon('refresh', 15); ?> Check Again</button>
+    </div>
 </div>
 <?php endif; ?>

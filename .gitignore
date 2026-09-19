@@ -1,2 +1,4 @@
 .env
 bundle.php
+/worker/node_modules/
+/worker/package-lock.json
