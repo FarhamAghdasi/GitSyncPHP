@@ -18,8 +18,6 @@
 
 ## Screenshots
 
-> Place screenshots in the `/screenshots` folder of the repository.
-
 | Overview |
 |----------|
 | ![GitSyncPHP Dashboard](/screenshots/dashboard.png) |
